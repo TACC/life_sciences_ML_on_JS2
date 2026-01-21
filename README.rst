@@ -1,5 +1,5 @@
 =======================
-Life Sciences ML @ TACC
+Life Sciences ML on Jetstream2
 =======================
 
 Quickstart
