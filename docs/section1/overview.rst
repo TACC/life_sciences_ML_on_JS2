@@ -16,3 +16,4 @@ to come.
    python_refresher
    exploratory_data_analysis
    set_up_for_tutorials
+   ml_life_science_introduction_to_jetstream2
