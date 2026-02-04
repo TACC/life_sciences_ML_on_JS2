@@ -1661,3 +1661,118 @@ Additional Resources
 
 * Adapted from: 
   `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+
+
+  Appendix: Alternative Setup Using Miniconda
+--------------------------------------------
+
+For those interested in exploring an alternative to the Docker-based setup, this appendix provides instructions for configuring your environment using Miniconda. 
+
+.. note::
+   These instructions are provided for independent exploration and are not used for this workshop. The Docker setup covered in Step 0 is the recommended approach for this tutorial.
+
+A.1 Install Miniconda
+^^^^^^^^^^^^^^^^^^^^^^
+
+If you don't have Miniconda installed yet, download and install it from the web shell:
+
+.. code-block:: console
+
+    $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    $ bash Miniconda3-latest-Linux-x86_64.sh
+
+Follow the prompts to complete the installation, then run:
+
+.. code-block:: console
+
+    $ source ~/.bashrc
+
+Verify the installation:
+
+.. code-block:: console
+
+    $ conda --version
+
+A.2 Create and Activate Conda Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Create a new conda environment with Python 3.10 (compatible with TensorFlow 2.14.0):
+
+.. code-block:: console
+
+    $ conda create -n ml-workshop python=3.10 -y
+    $ conda activate ml-workshop
+
+A.3 Install TensorFlow with GPU Support
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install TensorFlow 2.14.0 with GPU support and compatible CUDA libraries using conda-forge:
+
+.. code-block:: console
+
+    $ conda install -c conda-forge tensorflow-gpu=2.14.0 cudatoolkit=11.8 cudnn=8.6 -y
+
+This will install:
+
+- **TensorFlow 2.14.0** with GPU acceleration
+- **CUDA Toolkit 11.8** for GPU computation
+- **cuDNN 8.6** for deep neural network primitives
+
+A.4 Install Required Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install all necessary Python packages for image processing, data manipulation, and visualization using conda-forge:
+
+.. code-block:: console
+
+    $ conda install -c conda-forge pillow pandas matplotlib scikit-learn seaborn tqdm jupyter "numpy<2.0" -y
+
+This will install:
+
+- **Pillow**: For image loading and processing
+- **pandas**: For data organization and manipulation
+- **matplotlib** and **seaborn**: For data visualization
+- **scikit-learn**: For machine learning utilities and metrics
+- **tqdm**: For progress bars during training
+- **jupyter**: For running Jupyter notebooks
+- **numpy<2.0**: Compatible NumPy version for TensorFlow 2.14.0
+
+A.5 Launch Jupyter Notebook
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Navigate to your project directory and start Jupyter Notebook:
+
+.. code-block:: console
+
+    $ cd ~/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials
+    $ jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser
+
+To access the Jupyter Notebook from your browser, open the following URL, replacing ``<your-vm-ip>`` with your VM's IP address:
+
+.. code-block:: text
+
+    http://<your-vm-ip>:8888
+
+When prompted, enter the workshop password
+
+A.6 Verify Setup
+^^^^^^^^^^^^^^^^^
+
+Follow the same verification steps as in the main tutorial (Step 0.1) to confirm GPU availability and TensorFlow version.
+
+**Note on File Paths:**
+
+When using the Miniconda setup, you'll need to adjust file paths in the tutorial code. Instead of using the Docker container path ``/tf/project/data/coral-species``, use the relative path ``./data/coral-species`` from your project directory.
+
+For example, in Step 1.1, use:
+
+.. code-block:: python
+    :linenos:
+
+    from pathlib import Path
+    
+    # Define the path to the dataset directory
+    dataset_dir = Path('./data/coral-species')
+    
+    # List the contents of the data directory
+    print(list(dataset_dir.iterdir()))
