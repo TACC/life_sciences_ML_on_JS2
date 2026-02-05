@@ -12,8 +12,4 @@ considerations and evaluation in life science applications.
    ml_intro
    linear_regression
    linear_classification
-   model_quality
-   knn
-   decision_tree_and_random_forest
-   log_regression_and_NB
-   data_standardization_and_pipelines
+
