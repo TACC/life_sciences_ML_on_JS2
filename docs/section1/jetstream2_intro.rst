@@ -21,31 +21,8 @@ Before We Begin
 
 
 - Before We Begin
-- Those who wish to participate in the tutorial - If you have not done so already:
-- Create your ACCESS ID and share it in the chat.
+- You should have your ACCESS ID to be able to use Jetstream2.
 
-Agenda
-------
-
-
-- Agenda
-- Introduction to Jetstream2
-- What is Jetstream2?
-- Features
-- Use Cases
-- Interfaces
-- Limitations
-- ACCESS Allocations
-- Logging into Exosphere
-- Demo
-- Tutorial
-- Using Exosphere
-  - Creating and accessing your instance
-  - Software
-  - Volume/storage management
-  - Transferring data to and from your instance
-  - Saving and sharing images
-  - Instance management best practices
 
 What is Jetstream2?
 -------------------

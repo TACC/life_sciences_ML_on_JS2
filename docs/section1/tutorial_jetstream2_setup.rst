@@ -183,9 +183,6 @@ and select “g3.medium.” for Flavor
 5. Start Docker Container with Tensorflow and Jupyter - copy and paste into your terminal
 
 
-
-
-
 If you have problems pasting into the web shell try CRTL+ALT+SHIFT and paste into the clipboard do CTRL+ALT+SHIT again to close the side pop-out and then do CTRL+SHIFT+V to paste what is in that clipboard
 6. Go to the VM ip address in the browser ex http://128.171.215.74:8888 to open the jupyter session
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -204,6 +201,97 @@ The Jupyter Session
    :align: center
    :width: 800px
 
+
+
+
+Open a new notebook (new button near the upper right corner) and we can copy and past the following code to complete installing dependencies for this workshop:
+
+This cell will confirm that your environment is correctly configured:
+
+.. code-block:: python
+    :linenos:
+
+    import tensorflow as tf
+
+    # Check if TensorFlow can detect a GPU
+    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+
+    # Print TensorFlow version
+    print(tf.__version__)
+
+    # Set random seed for reproducibility
+    tf.random.set_seed(123)
+
+You should see the following output:
+
+.. code-block:: text
+
+    Num GPUs Available:  1
+    2.14.0
+
+0.2 Install Required Dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Before we begin working with the coral image dataset, we need to install several Python libraries for image processing, data manipulation, and visualization.
+
+**Install Core Libraries:**
+
+Run the following command to install the main dependencies:
+
+.. code-block:: python
+    :linenos:
+
+    !pip install Pillow pandas matplotlib scikit-learn seaborn tqdm
+
+This will install:
+
+- **Pillow**: For image loading and processing
+- **pandas**: For data organization and manipulation
+- **matplotlib** and **seaborn**: For data visualization
+- **scikit-learn**: For machine learning utilities and metrics
+- **tqdm**: For progress bars during training
+
+**Install Compatible NumPy Version:**
+
+TensorFlow 2.14.0 requires NumPy version < 2.0 for compatibility. Install the correct version:
+
+.. code-block:: python
+    :linenos:
+
+    !pip install "numpy<2.0"
+
+**Verify Pillow Installation:**
+
+To ensure Pillow is properly installed and available to the notebook, run:
+
+.. code-block:: python
+    :linenos:
+
+    import sys
+    !{sys.executable} -m pip install Pillow "numpy<2.0"
+    import PIL
+    print(f"PIL version: {PIL.__version__}")
+    print("Pillow installed successfully.")
+
+You should see output similar to:
+
+.. code-block:: text
+
+    PIL version: 12.x.x
+    Pillow installed successfully.
+
+**Reload the Kernel:**
+
+.. important::
+   After installing PIL (Pillow), you must **restart the kernel** for the notebook to recognize the package.
+
+To restart the kernel:
+
+1. In Jupyter Notebook, click **Kernel** in the menu bar
+2. Select **Restart Kernel** (or **Restart**)
+3. Confirm the restart when prompted
+
+After restarting, **re-run the GPU check code from Step 0.1** to reinitialize TensorFlow before proceeding.
 
 
 Appendix D: Acronyms
