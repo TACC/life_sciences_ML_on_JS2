@@ -191,7 +191,17 @@ If you have problems pasting into the web shell try CRTL+ALT+SHIFT and paste int
 - 5. Start Docker Container with Tensorflow and Jupyter - copy and paste into your terminal
 - If you have problems pasting into the web shell try CRTL+ALT+SHIFT and paste into the clipboard do CTRL+ALT+SHIT again to close the side pop-out and then do CTRL+SHIFT+V to paste what is in that clipboard
 - 6. Go to the VM ip address in the browser ex http://128.171.215.74:8888 to open the jupyter session
-- docker run --gpus all -it --rm   -p 8888:8888   -v "/home/exouser/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials:/tf/project"   tensorflow/tensorflow:2.14.0-gpu   bash -c "pip install jupyter && jupyter notebook --notebook-dir=/tf/project --ip 0.0.0.0 --port 8888 --no-browser --allow-root --ServerApp.token='ml-workshop'"
+
+   .. code-block:: console
+
+       docker run --gpus all -it --rm \
+           -p 8888:8888 \
+           -v "/home/exouser/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials:/tf/project" \
+           tensorflow/tensorflow:2.14.0-gpu \
+           bash -c "pip install jupyter && jupyter notebook --notebook-dir=/tf/project --ip 0.0.0.0 --port 8888 --no-browser --allow-root --ServerApp.token='ml-workshop'"
+
+.. code-block:: console
+   docker run --gpus all -it --rm   -p 8888:8888   -v "/home/exouser/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials:/tf/project"   tensorflow/tensorflow:2.14.0-gpu   bash -c "pip install jupyter && jupyter notebook --notebook-dir=/tf/project --ip 0.0.0.0 --port 8888 --no-browser --allow-root --ServerApp.token='ml-workshop'"
 
 The Jupyter Session
 --------

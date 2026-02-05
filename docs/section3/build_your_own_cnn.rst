@@ -72,7 +72,7 @@ Before training deep learning models, we need to set up our environment on Jetst
 
    .. code-block:: console
 
-       $ docker run --gpus all -it --rm \
+       docker run --gpus all -it --rm \
            -p 8888:8888 \
            -v "/home/exouser/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials:/tf/project" \
            tensorflow/tensorflow:2.14.0-gpu \
