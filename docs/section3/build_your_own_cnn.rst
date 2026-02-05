@@ -38,9 +38,9 @@ By the end of this exercise, you should be able to:
 
     .. code-block:: console
 
-        [frontera]$ echo "Hello, world!"
+        [exouser]$ echo "Hello, world!"
         Hello, world!
-        [frontera]$ # Linux commands here
+        [exouser]$ # Linux commands here
 
 
 Tutorial Setup and Materials
@@ -53,18 +53,62 @@ Part 1: Building a CNN Model from Scratch
 ------------------------------------------
 
 
-Step 0: Check GPU Availability and TensorFlow Version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 0: Launch Docker Container with Jupyter Notebook
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
+Before training deep learning models, we need to set up our environment on Jetstream2.
 
-If you've followed the setup instructions from `Introduction to Systems and Data: Set up for Tutorials <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/section1/set_up_for_tutorials.html>`_, you should now be running this notebook inside a containerized Jupyer kernel that includes:
+**Accessing the Web Shell:**
 
- - TensorFlow v. 2.13.0 with GPU support
+1. Navigate to your Jetstream2 web interface and locate your VM instance.
+
+2. Click on the **Web Shell** button to open a terminal in your browser:
+
+   .. image:: ./images/jetstream2-webshell-screenshot.png
+      :alt: Jetstream2 Web Shell interface
+      :align: center
+
+3. Once the web shell opens, run the following Docker command to launch a TensorFlow GPU container with Jupyter Notebook:
+
+   .. code-block:: console
+
+       $ docker run --gpus all -it --rm \
+           -p 8888:8888 \
+           -v "/home/exouser/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials:/tf/project" \
+           tensorflow/tensorflow:2.14.0-gpu \
+           bash -c "pip install jupyter && jupyter notebook --notebook-dir=/tf/project --ip 0.0.0.0 --port 8888 --no-browser --allow-root --ServerApp.token='ml-workshop'"
+
+   This command will:
+   
+   - Enable GPU acceleration (``--gpus all``)
+   - Map port 8888 for Jupyter Notebook access
+   - Mount your tutorial materials into the container at ``/tf/project``
+   - Install Jupyter and start the notebook server with TensorFlow v2.14.0
+
+4. Once the container starts, Jupyter Notebook will be running and accessible. You should see output indicating the server is ready.
+
+5. To access the Jupyter Notebook from your browser, open the following URL, replacing ``<your-vm-ip>`` with your VM's IP address (found in the Jetstream2 web interface):
+
+   .. code-block:: text
+
+       http://<your-vm-ip>:8888
+
+   For example: ``http://149.165.XXX.XXX:8888``
+
+6. Open this URL in your web browser and when prompted, enter the workshop password to access the Jupyter Notebook environment with all pre-configured dependencies.
+
+0.1 Verify GPU Availability and TensorFlow Version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you're in the Jupyter Notebook environment, it's important to verify that TensorFlow can access the GPU. Training on a GPU is significantly faster than on a CPU, especially for large image datasets.
+
+The Docker container includes:
+
+ - TensorFlow v2.14.0 with GPU support
  - CUDA libraries compatible with the system
  - All required Python packages pre-installed
 
-This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``Day3-tf-213``).
+This cell will confirm that your environment is correctly configured:
 
 .. code-block:: python
     :linenos:
@@ -84,12 +128,76 @@ You should see the following output:
 
 .. code-block:: text
 
-    Num GPUs Available:  4
-    2.13.0
+    Num GPUs Available:  1
+    2.14.0
+
+0.2 Install Required Dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Before we begin working with the coral image dataset, we need to install several Python libraries for image processing, data manipulation, and visualization.
+
+**Install Core Libraries:**
+
+Run the following command to install the main dependencies:
+
+.. code-block:: python
+    :linenos:
+
+    !pip install Pillow pandas matplotlib scikit-learn seaborn tqdm
+
+This will install:
+
+- **Pillow**: For image loading and processing
+- **pandas**: For data organization and manipulation
+- **matplotlib** and **seaborn**: For data visualization
+- **scikit-learn**: For machine learning utilities and metrics
+- **tqdm**: For progress bars during training
+
+**Install Compatible NumPy Version:**
+
+TensorFlow 2.14.0 requires NumPy version < 2.0 for compatibility. Install the correct version:
+
+.. code-block:: python
+    :linenos:
+
+    !pip install "numpy<2.0"
+
+**Verify Pillow Installation:**
+
+To ensure Pillow is properly installed and available to the notebook, run:
+
+.. code-block:: python
+    :linenos:
+
+    import sys
+    !{sys.executable} -m pip install Pillow "numpy<2.0"
+    import PIL
+    print(f"PIL version: {PIL.__version__}")
+    print("Pillow installed successfully.")
+
+You should see output similar to:
+
+.. code-block:: text
+
+    PIL version: 12.x.x
+    Pillow installed successfully.
+
+**Reload the Kernel:**
+
+.. important::
+   After installing PIL (Pillow), you must **restart the kernel** for the notebook to recognize the package.
+
+To restart the kernel:
+
+1. In Jupyter Notebook, click **Kernel** in the menu bar
+2. Select **Restart Kernel** (or **Restart**)
+3. Confirm the restart when prompted
+
+After restarting, **re-run the GPU check code from Step 0.1** to reinitialize TensorFlow before proceeding to Step 1.
 
 
 Step 1: Data Loading and Organization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this step, we load all coral images from the dataset directory and organize them into a DataFrame. 
 Each image is assigned a label based on the name of the directory it's stored in (i.e., 'ACER' - *Acropora cervicornis*, 'CNAT' - *Colpophyllia natans*, 'MCAV' - *Montastraea cavernosa*). 
@@ -97,40 +205,19 @@ Each image is assigned a label based on the name of the directory it's stored in
 This DataFrame will serve as the foundation for splitting our data into training, validation, and test sets later in the tutorial.
 
 1.1 List Dataset Directory Contents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place.
+Now that you're in the Jupyter Notebook environment with all dependencies installed, let's verify that the coral-species dataset is properly accessible.
 
-**Finding Your SCRATCH Directory Path:**
-
-On TACC systems, your scratch directory is a temporary storage space for computational work. To find the path to your scratch directory:
-
-1. After logging into **Frontera**, run this command to see your SCRATCH path:
-
-   .. code-block:: console
-
-       [frontera]$ echo $SCRATCH
-       # This will output something like: /scratch1/12345/username
-
-2. Verify that the coral-species dataset is in the correct location:
-
-   .. code-block:: console
-
-       [frontera]$ ls $SCRATCH/tacc-deep-learning-tutorials/data/coral-species
-       # You should see three directories: ACER, CNAT, and MCAV
-
-3. Use the full path shown by these commands in the code below.
-
-Now that you know your SCRATCH path, let's list the contents of the ``coral-species`` data directory to verify that the subdirectories for each coral species are present and correctly named:
+The dataset should be available at ``/tf/project/data/coral-species`` within the Docker container. Let's list the contents of this directory to verify that the subdirectories for each coral species are present and correctly named:
 
 .. code-block:: python
     :linenos:
 
     from pathlib import Path
 
-    # Define the path to the dataset directory
-    # NOTE: Replace the path below with the full path to your scratch directory containing the training materials
-    dataset_dir = Path('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species')
+    # Define the path to the dataset directory (mounted from the Docker container)
+    dataset_dir = Path('/tf/project/data/coral-species')
 
     # List the contents of the data directory
     print(list(dataset_dir.iterdir()))
@@ -139,11 +226,11 @@ You should see something like this:
 
 .. code-block:: text
 
-    [PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/CNAT'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/MCAV'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/ACER')]
+    [PosixPath('/tf/project/data/coral-species/CNAT'), PosixPath('/tf/project/data/coral-species/MCAV'), PosixPath('/tf/project/data/coral-species/ACER')]
 
 
 1.2 Check File Extensions
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, we scan the dataset directory and all its subdirectories to find out what types of image files are present. 
 This helps us catch unexpected or unsupported file types (e.g., GIFs, txt files, etc.), which could cause problems later when loading images. 
@@ -1574,3 +1661,118 @@ Additional Resources
 
 * Adapted from: 
   `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+
+
+  Appendix: Alternative Setup Using Miniconda
+--------------------------------------------
+
+For those interested in exploring an alternative to the Docker-based setup, this appendix provides instructions for configuring your environment using Miniconda. 
+
+.. note::
+   These instructions are provided for independent exploration and are not used for this workshop. The Docker setup covered in Step 0 is the recommended approach for this tutorial.
+
+A.1 Install Miniconda
+^^^^^^^^^^^^^^^^^^^^^^
+
+If you don't have Miniconda installed yet, download and install it from the web shell:
+
+.. code-block:: console
+
+    $ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    $ bash Miniconda3-latest-Linux-x86_64.sh
+
+Follow the prompts to complete the installation, then run:
+
+.. code-block:: console
+
+    $ source ~/.bashrc
+
+Verify the installation:
+
+.. code-block:: console
+
+    $ conda --version
+
+A.2 Create and Activate Conda Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Create a new conda environment with Python 3.10 (compatible with TensorFlow 2.14.0):
+
+.. code-block:: console
+
+    $ conda create -n ml-workshop python=3.10 -y
+    $ conda activate ml-workshop
+
+A.3 Install TensorFlow with GPU Support
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install TensorFlow 2.14.0 with GPU support and compatible CUDA libraries using conda-forge:
+
+.. code-block:: console
+
+    $ conda install -c conda-forge tensorflow-gpu=2.14.0 cudatoolkit=11.8 cudnn=8.6 -y
+
+This will install:
+
+- **TensorFlow 2.14.0** with GPU acceleration
+- **CUDA Toolkit 11.8** for GPU computation
+- **cuDNN 8.6** for deep neural network primitives
+
+A.4 Install Required Dependencies
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Install all necessary Python packages for image processing, data manipulation, and visualization using conda-forge:
+
+.. code-block:: console
+
+    $ conda install -c conda-forge pillow pandas matplotlib scikit-learn seaborn tqdm jupyter "numpy<2.0" -y
+
+This will install:
+
+- **Pillow**: For image loading and processing
+- **pandas**: For data organization and manipulation
+- **matplotlib** and **seaborn**: For data visualization
+- **scikit-learn**: For machine learning utilities and metrics
+- **tqdm**: For progress bars during training
+- **jupyter**: For running Jupyter notebooks
+- **numpy<2.0**: Compatible NumPy version for TensorFlow 2.14.0
+
+A.5 Launch Jupyter Notebook
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Navigate to your project directory and start Jupyter Notebook:
+
+.. code-block:: console
+
+    $ cd ~/Documents/life_sciences_ML_on_JS2/tacc-deep-learning-tutorials
+    $ jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser
+
+To access the Jupyter Notebook from your browser, open the following URL, replacing ``<your-vm-ip>`` with your VM's IP address:
+
+.. code-block:: text
+
+    http://<your-vm-ip>:8888
+
+When prompted, enter the workshop password
+
+A.6 Verify Setup
+^^^^^^^^^^^^^^^^^
+
+Follow the same verification steps as in the main tutorial (Step 0.1) to confirm GPU availability and TensorFlow version.
+
+**Note on File Paths:**
+
+When using the Miniconda setup, you'll need to adjust file paths in the tutorial code. Instead of using the Docker container path ``/tf/project/data/coral-species``, use the relative path ``./data/coral-species`` from your project directory.
+
+For example, in Step 1.1, use:
+
+.. code-block:: python
+    :linenos:
+
+    from pathlib import Path
+    
+    # Define the path to the dataset directory
+    dataset_dir = Path('./data/coral-species')
+    
+    # List the contents of the data directory
+    print(list(dataset_dir.iterdir()))
