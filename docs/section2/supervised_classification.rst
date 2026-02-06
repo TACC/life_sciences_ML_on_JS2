@@ -1,5 +1,5 @@
-Classification: A First Look
-============================
+Supervised Classification
+=========================
 
 In this section we introduce the classification problem, work with some initial examples, and 
 describe the training and testing phases involved in creating a classifier. We also take a first
@@ -35,7 +35,7 @@ will thus be called a binary classifier.
 Consider the following dataset depicting cell nuclei features from histology images and prognosis. 
 
 .. figure:: ./images/breast_cancer_pca.png
-    :width: 1000px
+    :width: 600px
     :align: center
     :alt: Benign vs Malignant
 
@@ -57,7 +57,7 @@ have an intuition about how one might proceed to determine which tumors are mali
 Is the image above suggestive of a way to predict the tumor type?
 
 .. figure:: ./images/breast_cancer_decision_boundary.png
-    :width: 1000px
+    :width: 600px
     :align: center
     :alt: Benign vs Malignant
 
@@ -177,6 +177,14 @@ samples of three species of iris: setosa, virginica, and versicolor. The feature
 sepal width, petal length, and petal width, all measured in cm.
 
 
+
+.. figure:: ./images/sepal_petal.png
+    :width: 400px
+    :align: center
+
+    Diagram illustrating sepal and petal length and width, adapted from `De Silva, 2020 <https://doi.org/10.13140/RG.2.2.14790.14406>`_.
+
+
 Loading the Data
 ^^^^^^^^^^^^^^^^
 
@@ -268,9 +276,8 @@ Let us take a moment to recall the general strategy for working with ML models.
 We have completed step 1 for the iris dataset --  we are ready to move to step 2. 
 
 We need to use some of the data for training and reserve some for testing how well the trained model 
-performs on *data it hasn't seen*. This is a very important aspect of machine learning. You may 
-read on the internet that there are ways to use all of the data for training, but don't be fooled by
-them! If you use data the model has already seen in training to test it, you are undermining the
+performs on *data it hasn't seen*. This is a very important aspect of machine learning. If you use
+data the model has already seen in training to test it, you are undermining the
 integrity of the test.
 
 In general, we'll want to train the model using "most" of the data and only hold back a relatively 
@@ -279,7 +286,7 @@ testing? There are a lot of aspects to this question, and we will revisit the to
 workshop, but for now, we'll split the data using 70% for training and 30% for testing. 
 
 We'll also use a "stratification" technique to ensure (as much as possible) that the split preserves 
-proportions of the target class. Fortunately, sklearn has a function to do the work for us:
+proportions of the target class. Fortunately, sklearn has a function to do the work for us.
 
 The ``train_test_split`` function from ``sklearn`` is very helpful here:
 
@@ -302,7 +309,7 @@ splitting even when the samples are imbalanced.
 Finally, we specify ``random_state=1``. This controls the randomization that is used in a way that
 guarantees deterministic results. That is, when setting a value for ``random_state``, repreated
 calls to ``train_test_split`` will always result in the same splitting for the same input data. This
-has important consequences for reproducibility, a topic we will revisit throughout the workshop. 
+has important consequences for reproducibility, a topic we will revisit throughout the unit. 
 
 Having split the data, we are ready to train our model. We'll use the  ``SGDClassifier`` class from
 the ``sklearn.linear_model`` module. The "SGD" stands for "Stochastic Gradient Descent" and the
@@ -326,7 +333,7 @@ Naturally, we use the training data when calling ``fit``:
     >>> clf.fit(X_train, y_train)
 
 Note that we specify ``loss="perceptron"`` to indicate we want to use the Perceptron algorithm, as
-discussed in class previously. The ``SGDClassifier`` supports several other algorithms (e.g.,
+discussed previously. The ``SGDClassifier`` supports several other algorithms (e.g.,
 "hinge", "squared_hinge", "log_loss", etc.). 
 
 The ``alpha`` parameter deals with something called regularization, which we haven't discussed yet
@@ -340,7 +347,7 @@ Validation
 ^^^^^^^^^^
 
 Now that the model has been trained we can proceed to step 3 -- validation. Our goal here is to
-compute the accuracy of our model against the test dataset (i.e., the ``test_`` data objects above).
+compute the accuracy of our model against the test dataset (i.e., the ``_test`` data objects above).
 We'll also compute the accuracy of the model against the training data to see how they compare. 
 
 For validation, we'll make use of another helpful function: the ``accuracy_score`` from the 
@@ -358,7 +365,7 @@ For validation, we'll make use of another helpful function: the ``accuracy_score
 
 As suggested by the code above, the ``accuracy_score`` function takes two parameters: the target
 (dependent) variables and the predictions on the independent variables. Our dependent variables are
-just the ``y_test`` and ``y_train`` objects defined before, and for the preduction, we apply the
+just the ``y_test`` and ``y_train`` objects defined before, and for the prediction, we apply the
 ``clf.predict`` function to each of the ``X_test`` and ``X_train`` arrays, respectively. 
 
 The result returned by ``accuracy_score`` is simply a float from 0 to 1 containing the fraction of
@@ -416,7 +423,7 @@ Examples:
 
     >>> # this is the same as computing the linear combination of the coef_ and intercept_:
     >>> import numpy as np
-    >>> np.sum( clf.coef_*X_train[0]) + clf.intercept_
+    >>> np.sum(clf.coef_*X_train[0]) + clf.intercept_
     array([-3.17277854])
 
     >>> clf.decision_function(X_train)
@@ -599,7 +606,6 @@ dataset from sklearn
 .. code-block:: python
 
   >>> from sklearn.datasets import load_breast_cancer
-
   >>> data = load_breast_cancer()
 
 1. Examine the features, target, and shape of the dataset as we did with the iris example

@@ -65,7 +65,7 @@ We can think of these properties as corresponding to the points :math:`(68, 77.9
 and then to the formula :math:`Y = 0.4958(X) + 44.183` which we can visualize as follows:
 
 .. figure:: ./images/two_melting_points.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 Congratulations! In some sense, this is our very first linear model. It models the melting point
@@ -93,7 +93,7 @@ If we add these additional data points to our plot, we see that our model did pr
 less good on Oligo 4, and was quite a bit off for Oligo 5 . 
 
 .. figure:: ./images/additional_melting_points.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 |
@@ -343,7 +343,7 @@ We can use matplotlib to visualize the results of the model's predictions on the
    >>> plt.plot(test_data_x, test_predict, color="blue", linewidth=3)
 
 .. figure:: ./images/lr_test_predict.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 |

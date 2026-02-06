@@ -3,14 +3,14 @@ Hands-on Machine Learning
 
 In this unit we introduce the field of Machine Learning (ML) and develop the first set of techniques
 for supervised learning. We will explore key ML concepts including linear regression and 
-supervised classificaiton, with a focus on life science applications. 
+supervised classification, with a focus on life science applications. 
 
 .. toctree::
    :maxdepth: 1
 
    ml_intro
    linear_regression
-   linear_classification
+   supervised_classification
 
 
 Note: This content is adapted from TACC's Machine Learning for Life Sciences Research
