@@ -11,6 +11,5 @@ natural language processing.
    :maxdepth: 1
 
    intro_to_dl
-   build_your_own_nn
    intro_to_cnn
    build_your_own_cnn
