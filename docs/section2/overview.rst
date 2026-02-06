@@ -13,3 +13,8 @@ considerations and evaluation in life science applications.
    linear_regression
    linear_classification
 
+
+Note: This content is adapted from TACC's Machine Learning for Life Sciences Research
+workshop, found `at this link <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/>`_.
+Please refer to those materials for further information.
+
