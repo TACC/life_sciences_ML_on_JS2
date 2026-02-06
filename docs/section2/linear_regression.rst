@@ -50,10 +50,10 @@ nucleotide and melting point of two oligos, we can uniquely determine the linear
 :math:`\%GC` and melting point. Here are two example values for :math:`\%GC` and :math:`Tm`:
 
 * Oligo 1: 68% GC; 77.9°C
-* Oligo 2: 44% GC; 66°C
+* Oligo 2: 44% GC; 66.0°C
 
 We can think of these properties as corresponding to the points :math:`(68, 77.9)` and
-:math:`(44, 66)` which leads to the system of equations to find Slope (:math:`m`) and y-intercept
+:math:`(44, 66.0)` which leads to the system of equations to find Slope (:math:`m`) and y-intercept
 (:math:`b`):
 
 .. math::
@@ -65,7 +65,7 @@ We can think of these properties as corresponding to the points :math:`(68, 77.9
 and then to the formula :math:`Y = 0.4958(X) + 44.183` which we can visualize as follows:
 
 .. figure:: ./images/two_melting_points.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 Congratulations! In some sense, this is our very first linear model. It models the melting point
@@ -76,22 +76,24 @@ Using this formula, we could predict the value of another oligo based on it's GC
 some additional properties. How does our model perform?
 
 * Oligo 3: 40% GC; actual value: 64.8°C; predicted value: ?
-* Oligo 4: 60% GC; actual value: 74°C; predicted value: ?
+* Oligo 4: 60% GC; actual value: 74.0°C; predicted value: ?
 * Oligo 5: 64% GC; actual value: 73.2°C; predicted value: ?
 
 *Solution:*
 
-We plug the points into the equation :math:`Y = 0.4958(X) + 44.1833` and compute :math:`Y`:
+.. toggle:: Click to show the answer
 
-* Oligo 3: Predicted Value = :math:`0.4958(40) + 44.183 = 64°C`
-* Oligo 4: Predicted Value = :math:`0.4958(60) + 44.183 = 73.9°C`
-* Oligo 5: Predicted Value = :math:`0.4958(64) + 44.183 = 75.9°C` 
+   We plug the points into the equation :math:`Y = 0.4958(X) + 44.1833` and compute :math:`Y`:
+   
+   * Oligo 3: Predicted Value = :math:`0.4958(40) + 44.183 \approx 64.0°C`
+   * Oligo 4: Predicted Value = :math:`0.4958(60) + 44.183 \approx 73.9°C`
+   * Oligo 5: Predicted Value = :math:`0.4958(64) + 44.183 \approx 75.9°C` 
 
 If we add these additional data points to our plot, we see that our model did pretty well on Oligo 3, 
 less good on Oligo 4, and was quite a bit off for Oligo 5 . 
 
 .. figure:: ./images/additional_melting_points.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 |
@@ -130,7 +132,7 @@ In mathematics, we say that such a system of equations is *overdetermined*; i.e.
 equations than unknowns, and such systems typically have no solution. In general, when working with
 real-world data we will not be able to find exact solutions to the set of model equations.
 
-Instead, with Linear Regression, the basic idea is to find a linear equation that, when used to
+Instead, with **Linear Regression**, the basic idea is to find a linear equation that, when used to
 predict the dependent variable of the known data points, minimizes a *cost* function. The cost
 function is related to another function, called the *error* function, which is also called a *loss*
 function. The error function assigns an error to each data point, and the cost function aggregates
@@ -214,16 +216,15 @@ SciKit-Learn
 ------------
 
 The Python Package SciKit-Learn (``scikit-learn`` on PyPI) provides implementations for a number of
-ML algorithms we will cover in this workshop. It also works well with NumPy, Pandas, Matplotlib,
+ML algorithms we will cover in this section. It also works well with NumPy, Pandas, Matplotlib,
 etc. 
 
-To install scikit-learn using pip:
+To get started, open up a Jupyter notebook, install ``scikit-learn`` if necessary, and import it (as 
+``sklearn``) using pip:
 
-.. code-block:: console
+.. code-block:: python
 
-   [frontera]$ pip install --user scikit-learn
-
-The main package is the ``sklearn`` package; check your installation: 
+   >>> !pip install --user scikit-learn
 
 .. code-block:: python3 
 
@@ -232,7 +233,7 @@ The main package is the ``sklearn`` package; check your installation:
 .. tip::
 
    If you are using the Jupyter Notebook kernel provided by the instructors, you should already have
-   ``scikit-learn`` installed and you can skip this step.
+   ``scikit-learn`` installed and you can skip the first step.
 
 
 Linear Regression in sklearn: First Steps
@@ -247,6 +248,13 @@ To get started, we create a ``LinearRegression`` object from the ``sklearn.linea
    >>> import sklearn.linear_model
    >>> lr = sklearn.linear_model.LinearRegression()
 
+.. note::
+
+   In this context, models, like ``sklearn.linear_model.LinearRegression()``, are python classes
+   that contain attributes specific to the model (like ``slope``, ``y_intercept``), as well as 
+   methods that apply to many different kinds of models (like ``fit()``, ``predict()``, and 
+   ``score()``).
+
 The next step is to fit the model to some data. We'll go ahead and use all of the data points 
 from the five properties in the discussion above. We'll use the ``.fit()`` function to fit the model
 to a collection of data.
@@ -258,8 +266,8 @@ We need to pass the :math:`X` values and the :math:`Y` values as separate arrays
 function. 
 
 Keep in mind that, in this first example, we have just one independent variable, but in general, 
-there will be multiple independent variables in the data set. For example, we will look at a
-diabetes  dataset that has additional variables such as: age, glucose, BMI, blood pressure, etc. 
+there will be multiple independent variables in the data set. (For example, later we will look at a
+diabetes dataset that has additional variables such as: age, glucose, BMI, blood pressure, etc.)
 
 With that in mind, we need to be careful when providing the data to the ``fit()`` function. The 
 ``LinearRegression`` class is designed to work for the general case, where there will be many 
@@ -313,7 +321,7 @@ We can call the ``predict()`` function on an array of data, as follows:
 .. code-block:: python
 
    >>> test_data_x = [[52], [54], [56], [58], [68]]
-   >>> test_data_y = [[68.2], [71], [72.3], [72], [75.5]] # actual values
+   >>> test_data_y = [[68.2], [71.0], [72.3], [72.0], [75.5]] # actual values
    >>> test_predict = lr.predict(test_data_x) # values predicted by model on the test data
 
 Note the shape of the ``test_predict`` object:
@@ -335,7 +343,7 @@ We can use matplotlib to visualize the results of the model's predictions on the
    >>> plt.plot(test_data_x, test_predict, color="blue", linewidth=3)
 
 .. figure:: ./images/lr_test_predict.png
-    :width: 1000px
+    :width: 600px
     :align: center
 
 |
@@ -355,7 +363,7 @@ Linear Regression with Pandas
 We can pass Pandas DataFrames directly to the sklearn functions (e.g., ``fit()`` and ``predict()``)
 once they have been pre-processed. The DNA melting point data is available on the class git
 repository inside unit02 folder. You can
-`download it here <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section2/files/dna_melting_points.csv>`_.
+`download it here <https://raw.githubusercontent.com/TACC/life_sciences_ML_on_JS2/refs/heads/main/docs/section2/files/dna_melting_points.csv>`_.
 Download the csv file from the website and read it into a DataFrame:
 
 .. code-block:: python
@@ -396,12 +404,16 @@ function to predict dependent variables given independent variables.
       --> array([76.737751])
 
       >>> # predict a set of values
-      >>> lr.predict(X.iloc[0:10])
+      >>> lr.predict(X.iloc[0:6])
       --> array([76.737751, 65.90160643, 64.09558233, 73.12570281, 74.93172691, 67.70763052])
 
       >>> # How do they compare to the actual values?
       >>> print(f"estimated melting point for Oligo 1: {lr.predict(X.iloc[0:1])}, actual melting point for Oligo 1: {Y.iloc[0]}")
       --> estimated melting point for Oligo 1: [76.737751], actual melting point for Oligo 1: 77.9
+
+      >>> # How well does the model fit the data?
+      >>> print(f"R-squared value for fit: {lr.score(X, Y)}")
+      --> R-squared value for fit: 0.9518535436795531
 
 
 Additional Resources

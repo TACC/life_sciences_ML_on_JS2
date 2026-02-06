@@ -2,7 +2,7 @@ Introduction to Machine Learning
 =================================
 
 Machine Learning (ML) is a field of Computer Science and Artificial Intelligence (AI) that develops 
-algorithms to analyze and infer patterns in data. Over the last decade or more, ML has been  
+algorithms to analyze and infer patterns in data. Over the last sevaral decades, ML has been  
 applied to a wide array of real-world applications, including:
 
 * Natural language: language translation, predictive text, chatbots
@@ -40,7 +40,16 @@ There are many examples of ML models. Here are just a few to give you a flavor:
 6. Given an image of a crop, determine if the crop has a disease; similarly, determine if the crop
    requires irrigation. 
 
-At a high level, the process is something like:
+
+
+.. figure:: ./images/ml_in_biology.png
+    :width: 600px
+    :align: center
+
+    Machine learning applications in biology, adapted from `Alam et. al, 2025 <https://doi.org/10.1186/s12915-025-02424-3>`_.
+
+
+At a high level, the process may resemble:
 
 1. Find or collect raw data about the process or function.
 2. Prepare the data for model training or fitting. 
@@ -52,12 +61,12 @@ Each of these steps is itself a complex subfield. Usually when people refer to "
 they are mostly referring to the development of new techniques for steps 3 and 4 (sometimes the term 
 *data science* is used to emphasize the large data collection, curation and management aspects). 
 
-In this workshop, we will mostly assume the raw data has been collected (step 1). The majority of 
+In this section, we will mostly assume the raw data has been collected (step 1). The majority of 
 our time will be spent on discussing techniques for steps 3 and 4, but we will also discuss steps 2 
 and 5.
 
 
-Supervised And Unsupervised Learning
+Supervised and Unsupervised Learning
 ------------------------------------
 
 All ML techniques require input data. In supervised learning, the dataset provided to the ML 
@@ -68,6 +77,15 @@ For example, if we want to train an ML model to learn to distinguish benign vs m
 cells, a supervised learning approach would provide the model with a collection of features from
 histology images, some that were benign and some that are malignant, as well as the appropriate
 label for each type. 
+
+
+.. figure:: ./images/types_of_ml.png
+    :width: 600px
+    :align: center
+
+    The main types of machine learning, adapted from `Peng et. al, 2021 <https://doi.org/10.3389/fphar.2021.720694>`_.
+
+
 
 By contrast, with unsupervised learning the ML model is trained with data, but the data do not
 contain labels. Without labels, the ML model must "learn" patterns in the abstract. A major approach
@@ -84,17 +102,17 @@ Unsupervised learning techniques are powerful because they do not require labell
 time-consuming process, at best, and one that requires an expert to distinguish different label
 values (e.g., the difference between a benign and malignant tumor). 
 
-Nevertheless, due to time constraints we will focus on supervised learning in this unit.
+Nevertheless, due to time constraints we will focus on supervised learning in this section.
 
 
-Model Variables, Classification and Regression
-----------------------------------------------
+Model Variables, Classification, and Regression
+-----------------------------------------------
 
-We can further categorize supervised learning models as classification or regression models. 
-To understand the distinction, it is helpful to first introduce independent and dependent 
+We can further categorize **supervised learning** models as **classification** or **regression**
+models. To understand the distinction, it is helpful to first introduce independent and dependent 
 variables. 
 
-In a ML setting, the *dependent variable* is the value the model is trying to predict, and 
+In an ML setting, the *dependent variable* is the value the model is trying to predict, and 
 the *independent variables* are the values the model is using to predict the dependent variable. 
 
 Continuing with our examples above, we can identify the independent and dependent variables as 
@@ -131,8 +149,10 @@ follows:
    *=> The image is the independent variable and the labels (disease or no disease, irrigation or no
    irrigation) are the dependent variables.*
 
-**Exercise and Discussion.** What would the data types (i.e., String, Boolean, etc.) be for 
-the independent and dependent variables in each of the examples above?
+.. attention::
+
+   **Exercise:** What would the data types (i.e., ``str``, ``bool``, etc.) be for 
+   the independent and dependent variables in each of the examples above?
 
 
 Classification and Regression
@@ -143,8 +163,7 @@ the *x* axis and dependent variables on the *y* axis.
 
 Now that we understand independent and dependent variables, we can define classification and 
 regression models. *Classification models* involve dependent variables that take a finite set of 
-values. We call such dependent variables *categorical* or *discrete*, just like with the categorical 
-variables we saw in the `sections on pandas <../section1/exploratory_data_analysis.html>`_.
+values. We call such dependent variables *categorical* or *discrete*.
 
 A particular case worth noting is the so-called *Boolean classifiers*, which try to
 predict dependent variables that contain just two possible values. The name comes from the 
@@ -160,16 +179,15 @@ values. Example 5 provides an example of a regression model -- the market values
 properties are dollar amounts that are unbounded (in practice, they are bounded by very large 
 values but it can simplify our thinking to consider them unbounded).
 
-**Exercise and Discussion.** In each of the following examples, decide whether the 
-ML problem is a supervised learning or unsupervised learning problem. For the supervised learning, 
-additionally decide whether the problem is a classification or regression problem.
+.. attention::
 
-1. Given an image of a tumor, determine whether the tumor is cancerous or benign. 
-2. In an online music streaming site, based on a user's listening history, determine other music
-   they are likely to enjoy.
-3. Given an image of animal wildlife, determine the species of animal(s). 
-4. Given the dataset of information on animal adoptions from the previous unit, predict the
-   likelihood of an animal being adopted based on its features (e.g., age, breed, color, etc.).
+   **Exercise:** In each of the following examples, decide whether the 
+   ML problem is a supervised learning or unsupervised learning problem. For the supervised learning, 
+   additionally decide whether the problem is a classification or regression problem.   
+
+   1. Given an image of a tumor, determine whether the tumor is cancerous or benign. 
+   2. Given a DNA oligo sequence, predict the melting point.
+   3. Given an image of animal wildlife, determine the species of animal(s). 
 
 
 Additional Resources
